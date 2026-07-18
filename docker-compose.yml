@@ -1,0 +1,14 @@
+services:
+  bookkeeping-bot:
+    build: .
+    env_file: .env
+    restart: unless-stopped
+    volumes:
+      - bookkeeping-data:/app/data
+      - bookkeeping-exports:/app/exports
+      - bookkeeping-backups:/app/backups
+
+volumes:
+  bookkeeping-data:
+  bookkeeping-exports:
+  bookkeeping-backups:

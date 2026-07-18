@@ -1,0 +1,83 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "telegram-bookkeeping-bot"
+version = "0.1.0"
+description = "Private Indonesian Telegram bookkeeping bot with PDF and Excel exports"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "aiogram>=3.13,<4",
+  "SQLAlchemy>=2.0,<3",
+  "aiosqlite>=0.20,<1",
+  "alembic>=1.13,<2",
+  "openpyxl>=3.1,<4",
+  "reportlab>=4.2,<5",
+  "APScheduler>=3.10,<4",
+  "python-dotenv>=1.0,<2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8,<9",
+  "pytest-asyncio>=0.23,<1",
+  "ruff>=0.6,<1",
+  "pypdf>=5,<6",
+]
+
+[project.scripts]
+bookkeeping-bot = "app.main:main"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.alembic]
+# Kept for tooling that reads pyproject; runtime settings live in alembic.ini.
+
+[dependency-groups]
+dev = [
+  "pytest>=8,<9",
+  "pytest-asyncio>=0.23,<1",
+  "ruff>=0.6,<1",
+  "pypdf>=5,<6",
+]
+
+[tool.pyright]
+pythonVersion = "3.11"
+typeCheckingMode = "basic"
+
+[project.urls]
+Repository = "https://example.invalid/telegram-bookkeeping-bot"
+
+[tool.setuptools]
+include-package-data = true
+
+# Keep package data minimal; runtime creates data/export directories.
+
+[tool.coverage.run]
+branch = true
+source = ["app"]
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B", "E501"]
