@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Any
 
 from sqlalchemy import and_, desc, or_, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import (
@@ -39,21 +40,31 @@ async def get_or_create_user(session: AsyncSession, telegram_user_id: int, **pro
             **{key: profile.get(key) for key in ("username", "first_name")},
         )
         session.add(user)
-        await session.flush()
-        session.add(UserSetting(user_id=user.id))
-        for name, emoji, is_income in DEFAULT_CATEGORIES:
-            session.add(Category(user_id=user.id, name=name, emoji=emoji, is_income=is_income))
-        await session.commit()
-        await session.refresh(user)
-    else:
-        changed = False
-        for key in ("username", "first_name"):
-            value = profile.get(key)
-            if value is not None and getattr(user, key) != value:
-                setattr(user, key, value)
-                changed = True
-        if changed:
+        try:
+            await session.flush()
+        except IntegrityError:
+            # Another update created the same Telegram user concurrently.
+            await session.rollback()
+            user = await session.scalar(
+                select(User).where(User.telegram_user_id == telegram_user_id)
+            )
+            if user is None:
+                raise
+        else:
+            session.add(UserSetting(user_id=user.id))
+            for name, emoji, is_income in DEFAULT_CATEGORIES:
+                session.add(Category(user_id=user.id, name=name, emoji=emoji, is_income=is_income))
             await session.commit()
+            await session.refresh(user)
+
+    changed = False
+    for key in ("username", "first_name"):
+        value = profile.get(key)
+        if value is not None and getattr(user, key) != value:
+            setattr(user, key, value)
+            changed = True
+    if changed:
+        await session.commit()
     return user
 
 
