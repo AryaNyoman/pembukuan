@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ -f /workspaces/.codespaces/shared/.env-secrets ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source /workspaces/.codespaces/shared/.env-secrets
+  set +a
+fi
+
 : "${TELEGRAM_BOT_TOKEN:?Set TELEGRAM_BOT_TOKEN as a GitHub Codespaces secret first}"
 : "${ALLOWED_USER_IDS:?Set ALLOWED_USER_IDS as a GitHub Codespaces secret first}"
 : "${ADMIN_USER_ID:?Set ADMIN_USER_ID as a GitHub Codespaces secret first}"

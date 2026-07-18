@@ -4,6 +4,15 @@ set -euo pipefail
 cd /workspaces/pembukuan
 mkdir -p data exports backups
 
+# GitHub stores Codespaces secrets in a protected environment file. Non-interactive
+# SSH shells do not automatically import it, so load it without printing values.
+if [[ -f /workspaces/.codespaces/shared/.env-secrets ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source /workspaces/.codespaces/shared/.env-secrets
+  set +a
+fi
+
 # User IDs are supplied as Codespaces secrets and never committed to the public repo.
 : "${ALLOWED_USER_IDS:?ALLOWED_USER_IDS Codespaces secret belum tersedia}"
 : "${ADMIN_USER_ID:?ADMIN_USER_ID Codespaces secret belum tersedia}"
