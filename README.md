@@ -1,6 +1,6 @@
 # Buku Kas Telegram Bot
 
-Bot Telegram pembukuan pribadi berbahasa Indonesia untuk dua user yang diizinkan. Mendukung input transaksi langsung, ringkasan, pencarian, export PDF/Excel, SQLite, Docker, dan allowlist user ID.
+Bot Telegram pembukuan pribadi berbahasa Indonesia untuk user yang diizinkan. Mendukung input transaksi langsung, ringkasan, pencarian, export PDF/Excel, SQLite, Docker, GitHub Codespaces, dan allowlist user ID.
 
 > **Keamanan:** token bot yang pernah dibagikan di chat harus dianggap bocor. Revoke/regenerate token melalui `@BotFather`, lalu isi token baru hanya di `.env`. Jangan commit `.env`.
 
@@ -99,6 +99,70 @@ docker compose down
 ```
 
 `docker compose down -v` akan menghapus volume data; jangan jalankan kecuali memang ingin menghapus database.
+
+## GitHub Codespaces
+
+Repository ini sudah memiliki `.devcontainer/devcontainer.json`, sehingga Codespace dapat dibuat langsung dari branch `main`.
+
+### 1. Buat Codespace
+
+1. Buka [repository pembukuan](https://github.com/AryaNyoman/pembukuan).
+2. Klik **Code** → **Codespaces** → **Create codespace on main**.
+3. Tunggu proses pembuatan container selesai. `postCreateCommand` akan memasang dependency dan menjalankan migrasi.
+
+### 2. Tambahkan secret Telegram
+
+Token lama yang pernah dibagikan tidak boleh digunakan. Buat/regenerate token baru melalui `@BotFather`, lalu di GitHub buka:
+
+**Profile → Settings → Codespaces → Secrets → New secret**
+
+Buat secret:
+
+```text
+Name: TELEGRAM_BOT_TOKEN
+Value: token baru dari BotFather
+Repository access: AryaNyoman/pembukuan
+```
+
+Jangan menaruh token di `.env`, source code, README, atau commit GitHub. Secret Codespaces akan tersedia sebagai environment variable setelah Codespace dibuat/restart.
+
+### 3. Jalankan bot di Codespace
+
+Di terminal Codespace:
+
+```bash
+export ALLOWED_USER_IDS=1105904688,6373275001,7427314023
+export ADMIN_USER_ID=1105904688
+./scripts/codespace-start.sh
+```
+
+Script tersebut menjalankan `alembic upgrade head`, kemudian `python -m app.main`. Bot menggunakan long polling, jadi tidak membutuhkan port publik atau port forwarding.
+
+Untuk menjalankan di background selama Codespace tetap aktif:
+
+```bash
+nohup ./scripts/codespace-start.sh > /tmp/bookkeeping-bot.log 2>&1 &
+```
+
+Cek log tanpa mencetak token:
+
+```bash
+tail -f /tmp/bookkeeping-bot.log
+```
+
+Hentikan bot:
+
+```bash
+./scripts/codespace-stop.sh
+```
+
+### 4. Batasan Codespaces
+
+- Laptop boleh dimatikan setelah bot benar-benar berjalan di Codespace.
+- Jika Codespace dihentikan, proses bot ikut berhenti.
+- Codespace default dapat timeout setelah sekitar 30 menit tanpa aktivitas; pengaturan timeout dapat diubah di preferensi akun, tetapi tetap bukan jaminan uptime 24/7.
+- Codespace yang aktif menggunakan compute dan dapat menimbulkan biaya setelah kuota gratis habis. Codespace yang berhenti tetap dapat menimbulkan biaya storage.
+- Untuk layanan pembukuan 24/7 yang lebih stabil, gunakan VPS atau host always-on.
 
 ## Perintah Telegram
 
