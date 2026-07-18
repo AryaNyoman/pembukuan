@@ -20,7 +20,8 @@
     "EXPORT_TTL_SECONDS": "3600",
     "REMINDER_HOUR": "21"
   },
-  "postCreateCommand": "python -m pip install --upgrade pip && pip install -e '.[dev]' && mkdir -p data exports backups && alembic upgrade head",
+  "postCreateCommand": "/usr/bin/python -m venv .venv && .venv/bin/python -m pip install --upgrade pip && .venv/bin/python -m pip install -e '.[dev]' && mkdir -p data exports backups && .venv/bin/python -m alembic upgrade head",
+  "postStartCommand": "bash .devcontainer/post-start.sh",
   "forwardPorts": [],
   "customizations": {
     "vscode": {
