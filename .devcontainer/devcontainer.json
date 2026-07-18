@@ -8,6 +8,18 @@
     }
   },
   "remoteUser": "vscode",
+  "containerEnv": {
+    "ALLOWED_USER_IDS": "1105904688,6373275001,7427314023",
+    "ADMIN_USER_ID": "1105904688",
+    "DATABASE_URL": "sqlite+aiosqlite:///./data/bookkeeping.db",
+    "APP_TIMEZONE": "Asia/Makassar",
+    "CURRENCY": "IDR",
+    "LOG_LEVEL": "INFO",
+    "BACKUP_DIR": "./backups",
+    "EXPORT_DIR": "./exports",
+    "EXPORT_TTL_SECONDS": "3600",
+    "REMINDER_HOUR": "21"
+  },
   "postCreateCommand": "python -m pip install --upgrade pip && pip install -e '.[dev]' && mkdir -p data exports backups && alembic upgrade head",
   "forwardPorts": [],
   "customizations": {
