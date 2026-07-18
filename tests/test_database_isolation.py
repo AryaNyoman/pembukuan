@@ -16,8 +16,8 @@ async def test_transactions_are_isolated_and_sqlite_dates_can_be_summarized():
     occurred = datetime(2026, 7, 18, 12, tzinfo=ZoneInfo("Asia/Makassar"))
 
     async with sessions() as session:
-        first = await repo.get_or_create_user(session, 1105904688)
-        second = await repo.get_or_create_user(session, 6373275001)
+        first = await repo.get_or_create_user(session, 123456789)
+        second = await repo.get_or_create_user(session, 987654321)
         await repo.add_transaction(
             session,
             user_id=first.id,

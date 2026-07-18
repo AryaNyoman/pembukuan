@@ -4,9 +4,9 @@ set -euo pipefail
 cd /workspaces/pembukuan
 mkdir -p data exports backups
 
-# Non-secret runtime defaults. Codespaces secrets remain environment-only.
-export ALLOWED_USER_IDS="${ALLOWED_USER_IDS:-1105904688,6373275001,7427314023}"
-export ADMIN_USER_ID="${ADMIN_USER_ID:-1105904688}"
+# User IDs are supplied as Codespaces secrets and never committed to the public repo.
+: "${ALLOWED_USER_IDS:?ALLOWED_USER_IDS Codespaces secret belum tersedia}"
+: "${ADMIN_USER_ID:?ADMIN_USER_ID Codespaces secret belum tersedia}"
 export DATABASE_URL="${DATABASE_URL:-sqlite+aiosqlite:///./data/bookkeeping.db}"
 export APP_TIMEZONE="${APP_TIMEZONE:-Asia/Makassar}"
 export CURRENCY="${CURRENCY:-IDR}"

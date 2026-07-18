@@ -9,8 +9,6 @@
   },
   "remoteUser": "vscode",
   "containerEnv": {
-    "ALLOWED_USER_IDS": "1105904688,6373275001,7427314023",
-    "ADMIN_USER_ID": "1105904688",
     "DATABASE_URL": "sqlite+aiosqlite:///./data/bookkeeping.db",
     "APP_TIMEZONE": "Asia/Makassar",
     "CURRENCY": "IDR",
@@ -39,6 +37,12 @@
     "TELEGRAM_BOT_TOKEN": {
       "description": "A new Telegram bot token from @BotFather. Never commit it to the repository.",
       "documentationUrl": "https://core.telegram.org/bots/tutorial#obtain-your-bot-token"
+    },
+    "ALLOWED_USER_IDS": {
+      "description": "Comma-separated Telegram user IDs allowed to access the bot."
+    },
+    "ADMIN_USER_ID": {
+      "description": "Telegram user ID for bot administration."
     }
   }
 }

@@ -59,8 +59,8 @@ Edit `.env` dan masukkan token baru:
 
 ```dotenv
 TELEGRAM_BOT_TOKEN=TOKEN_BARU_DARI_BOTFATHER
-ALLOWED_USER_IDS=1105904688,6373275001,7427314023
-ADMIN_USER_ID=1105904688
+ALLOWED_USER_IDS=123456789,987654321
+ADMIN_USER_ID=123456789
 DATABASE_URL=sqlite+aiosqlite:///./data/bookkeeping.db
 APP_TIMEZONE=Asia/Makassar
 ```
@@ -131,8 +131,7 @@ Jangan menaruh token di `.env`, source code, README, atau commit GitHub. Secret 
 Di terminal Codespace:
 
 ```bash
-export ALLOWED_USER_IDS=1105904688,6373275001,7427314023
-export ADMIN_USER_ID=1105904688
+# ALLOWED_USER_IDS dan ADMIN_USER_ID diambil dari Codespaces Secrets.
 ./scripts/codespace-start.sh
 ```
 

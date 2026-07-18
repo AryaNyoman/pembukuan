@@ -2,8 +2,8 @@
 set -euo pipefail
 
 : "${TELEGRAM_BOT_TOKEN:?Set TELEGRAM_BOT_TOKEN as a GitHub Codespaces secret first}"
-export ALLOWED_USER_IDS="${ALLOWED_USER_IDS:-1105904688,6373275001,7427314023}"
-export ADMIN_USER_ID="${ADMIN_USER_ID:-1105904688}"
+: "${ALLOWED_USER_IDS:?Set ALLOWED_USER_IDS as a GitHub Codespaces secret first}"
+: "${ADMIN_USER_ID:?Set ADMIN_USER_ID as a GitHub Codespaces secret first}"
 export DATABASE_URL="${DATABASE_URL:-sqlite+aiosqlite:///./data/bookkeeping.db}"
 export APP_TIMEZONE="${APP_TIMEZONE:-Asia/Makassar}"
 export CURRENCY="${CURRENCY:-IDR}"
