@@ -4,18 +4,6 @@ set -euo pipefail
 cd /workspaces/pembukuan
 mkdir -p data exports backups
 
-# GitHub stores Codespaces secrets in a protected environment file. Non-interactive
-# SSH shells do not automatically import it, so load it without printing values.
-if [[ -f /workspaces/.codespaces/shared/.env-secrets ]]; then
-  set -a
-  # shellcheck disable=SC1091
-  source /workspaces/.codespaces/shared/.env-secrets
-  set +a
-fi
-
-# User IDs are supplied as Codespaces secrets and never committed to the public repo.
-: "${ALLOWED_USER_IDS:?ALLOWED_USER_IDS Codespaces secret belum tersedia}"
-: "${ADMIN_USER_ID:?ADMIN_USER_ID Codespaces secret belum tersedia}"
 export DATABASE_URL="${DATABASE_URL:-sqlite+aiosqlite:///./data/bookkeeping.db}"
 export APP_TIMEZONE="${APP_TIMEZONE:-Asia/Makassar}"
 export CURRENCY="${CURRENCY:-IDR}"
@@ -27,16 +15,16 @@ export REMINDER_HOUR="${REMINDER_HOUR:-21}"
 
 .venv/bin/python -m alembic upgrade head
 
-if [[ -z "${TELEGRAM_BOT_TOKEN:-}" ]]; then
-  printf '%s\n' 'TELEGRAM_BOT_TOKEN belum tersedia; bot tidak dijalankan.'
+if [[ ! -f /workspaces/.codespaces/shared/.env-secrets ]]; then
+  printf '%s\n' 'Codespaces secrets belum tersedia; bot tidak dijalankan.'
   exit 0
 fi
 
-if pgrep -f 'python -m app.main' >/dev/null 2>&1; then
+if pgrep -f 'python -m app.\(main\|codespaces_runtime\)' >/dev/null 2>&1; then
   printf '%s\n' 'Bot sudah berjalan; tidak membuat proses polling kedua.'
   exit 0
 fi
 
-nohup env PATH="$PWD/.venv/bin:$PATH" bash scripts/codespace-start.sh \
+nohup env PATH="$PWD/.venv/bin:$PATH" .venv/bin/python -m app.codespaces_runtime \
   > /tmp/bookkeeping-bot.log 2>&1 &
 printf '%s\n' "Bot dimulai dengan PID $!."
