@@ -155,7 +155,49 @@ Hentikan bot:
 ./scripts/codespace-stop.sh
 ```
 
-### 4. Batasan Codespaces
+### 4. Restart dan rebuild Codespace
+
+#### Restart bot saja
+
+Di terminal Codespace:
+
+```bash
+./scripts/codespace-stop.sh
+bash .devcontainer/post-start.sh
+```
+
+Verifikasi:
+
+```bash
+pgrep -af 'app.codespaces_runtime'
+tail -n 50 /tmp/bookkeeping-bot.log
+```
+
+#### Restart seluruh Codespace lewat GitHub
+
+1. Buka [GitHub Codespaces](https://github.com/codespaces).
+2. Pada `pembukuan-host-final`, klik menu `...` → **Stop codespace**.
+3. Tunggu status berhenti, lalu klik **Open in browser** untuk menyalakannya kembali.
+4. Jika bot belum otomatis aktif setelah editor terbuka, jalankan:
+
+```bash
+cd /workspaces/pembukuan
+bash .devcontainer/post-start.sh
+```
+
+#### Rebuild container
+
+Gunakan rebuild hanya setelah `.devcontainer/devcontainer.json` berubah atau environment rusak:
+
+1. Buka Codespace di browser.
+2. Tekan `Ctrl+Shift+P`.
+3. Pilih **Codespaces: Rebuild Container**.
+4. Tunggu dependency dan migrasi selesai.
+5. Verifikasi bot dan log seperti command di atas.
+
+Rebuild mempertahankan file dalam `/workspaces`, tetapi data penting tetap harus dibackup. Jangan memilih **Delete Codespace** jika database/backup belum diamankan.
+
+### 5. Batasan Codespaces
 
 - Laptop boleh dimatikan setelah bot benar-benar berjalan di Codespace.
 - Jika Codespace dihentikan, proses bot ikut berhenti.
